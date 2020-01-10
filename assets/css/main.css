@@ -1,0 +1,32 @@
+.inscription{
+  text-align: center;
+}
+
+.bodybg{
+  
+  background-color: #ecf0f1;
+
+}
+
+.btnLogin{
+
+  margin-left: 40%;
+
+}
+.Adresse {
+	width: 50%;
+}
+
+#conntitle {
+  text-align: center;
+}
+
+.container-fluid.footer p{
+  text-align: center;
+  margin: 30px;
+}
+
+.erreur{
+  color: crimson;
+  text-align: center;
+}

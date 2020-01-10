@@ -1,31 +1,58 @@
 <?php
 
-session_start();    
+session_start(); // demarage de la session
 
-//Connection a la base de donnees
+include "fonctions.php"; // appelle du fichier avec les fonctions
+$bdd = new PDO('mysql:host=localhost;dbname=ppe2;charset=utf8', 'root', ''); // connection a la db
 
 // Recuperation du form
 $email = $_POST['email'];
-$mdp = $_POST['mdp'];
+$mdp = md5($_POST['mdp']);
 
-$infos = array($email, $mdp);
+if ($_POST['mdp']){   // si le mdp n'est pas indiqué
+}else{
+    erreur(3,"login.php");
+}
 
-// detection d'erreurs
-for ($i=0; $i < 1; $i++) { 
-
-    if ($infos[$i]){
-        // aucune action necessaire
-    }else{
-        // Renvoyer une erreur a la page inscription avec le nom de l'erreur
-        header('location: login.php?erreur='.$i);   
-    }
+if ($email){ // si l'email n'est pas indiqué
+}else{
+    erreur(2,"login.php");
 }
 
 // recuperation des infos de l'utilisateur en fonction de l'email
+$reponse = $bdd->query("SELECT psswd FROM user WHERE email='".$email."'");
 
-// verification du mot de passe 
+$mdpBdd = $reponse->fetch();
 
-// acces au site
+$reponse->closeCursor();
+
+if ($mdpBdd['psswd']){ // si l'email est pas dans la base de données
+
+    if($mdp == $mdpBdd['psswd']){ // verification du mot de passe 
+        echo "mdp trouvé";
+        echo("tes co");// acces au site + initialisation session
+        $allDonnes = $bdd->query("SELECT * FROM user WHERE email='".$email."'");
+        $donnees = $allDonnes->fetch();
+        
+        $_SESSION["nom"] = $donnees['lastname'];
+        $_SESSION["prenom"] = $donnees['firstname'];
+        $_SESSION["email"] = $donnees['email'];
+        $_SESSION["sexe"] = $donnees['sex'];
+        $_SESSION["adresse"] = $donnees['address'];
+        $_SESSION["ville"] = $donnees['city'];
+        $_SESSION["code_pos"] = $donnees['postal_code'];
+        $_SESSION["date_naissance"] = $donnees['brth_date'];
+        $_SESSION["num_tel"] = $donnees['phone_number'];
+
+        header("Location: index.php");
+
+    }else{
+        erreur(1, "login.php");
+    }
+
+}else{
+    erreur(2,"login.php"); 
+}
 
 
-?>
+?>                   
